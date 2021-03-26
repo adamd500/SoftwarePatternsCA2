@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1044844715971",
+    "project_id": "softwarepatternsca2",
+    "storage_bucket": "softwarepatternsca2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044844715971:android:6cd1c27ef9884cc915e776",
+        "android_client_info": {
+          "package_name": "com.example.softwarepatternsca2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1044844715971-9i3qhb5i3dvldk16bvo3d37ponel58ed.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3SaQ8AbVthLQJCmbBbcXnIKrOHAP7BE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1044844715971-9i3qhb5i3dvldk16bvo3d37ponel58ed.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
