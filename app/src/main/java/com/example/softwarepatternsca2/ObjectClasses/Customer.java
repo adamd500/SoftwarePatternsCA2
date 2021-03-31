@@ -13,14 +13,15 @@ public class Customer {
     String cardExpiry;
     boolean newUserDiscountUsed;
     int numOfOrders;
-
+    boolean hasNewCart;
 
     public Customer(){
 
     }
 
-    public Customer(String name, String address, String eircode, String email, String phoneNumber,
-                    String customerId, String cardNumber, String securityCode, String cardExpiry, boolean newUserDiscountUsed, int numOfOrders) {
+
+    public Customer(String name, String address, String eircode, String email, String phoneNumber, String customerId,
+                    String cardNumber, String securityCode, String cardExpiry, boolean newUserDiscountUsed, int numOfOrders, boolean hasNewCart) {
         this.name = name;
         this.address = address;
         this.eircode = eircode;
@@ -32,6 +33,7 @@ public class Customer {
         this.cardExpiry = cardExpiry;
         this.newUserDiscountUsed = newUserDiscountUsed;
         this.numOfOrders = numOfOrders;
+        this.hasNewCart = hasNewCart;
     }
 
     public String getName() {
@@ -120,5 +122,13 @@ public class Customer {
 
     public void setNumOfOrders(int numOfOrders) {
         this.numOfOrders = numOfOrders;
+    }
+
+    public boolean isHasNewCart() {
+        return hasNewCart;
+    }
+
+    public void setHasNewCart(boolean hasNewCart) {
+        this.hasNewCart = hasNewCart;
     }
 }

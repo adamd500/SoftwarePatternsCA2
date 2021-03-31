@@ -58,6 +58,19 @@
         app:layout_constraintVertical_bias="0.743" />
 
     <EditText
+        android:id="@+id/stockAmount"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:hint="Stock Amount"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.834" />
+
+    <EditText
         android:id="@+id/editManufacture"
         android:layout_width="380dp"
         android:layout_height="50dp"

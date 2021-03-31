@@ -71,7 +71,7 @@ public class RegisterCustomer extends AppCompatActivity {
         }else {
 
             customer = new Customer( name,  address,  location,  email,  number,
-                    "customerId",  "cardNumber",  "securityCode",  "cardExpiry", false , 0);
+                    "customerId",  "cardNumber",  "securityCode",  "cardExpiry", false , 0,false);
             registerCustomer(email, password);
 
         }

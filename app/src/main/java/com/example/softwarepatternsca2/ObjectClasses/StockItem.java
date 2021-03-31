@@ -1,5 +1,8 @@
 package com.example.softwarepatternsca2.ObjectClasses;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StockItem {
 
     String title;
@@ -8,18 +11,23 @@ public class StockItem {
     String category;
     String imageUrl;
     String itemId;
+    int stockAmount;
+    ArrayList<String> feedback=new ArrayList<String>();
+    int customerRating;
+    int numOfRatings;
 
     public StockItem(){
 
     }
 
-    public StockItem(String title, String manufacturer, int price, String category, String imageUrl, String itemId) {
+    public StockItem(String title, String manufacturer, int price, String category, String imageUrl, String itemId, int stockAmount) {
         this.title = title;
         this.manufacturer = manufacturer;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
         this.itemId = itemId;
+        this.stockAmount = stockAmount;
     }
 
     public String getTitle() {
@@ -68,5 +76,37 @@ public class StockItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getStockAmount() {
+        return stockAmount;
+    }
+
+    public void setStockAmount(int stockAmount) {
+        this.stockAmount = stockAmount;
+    }
+
+    public ArrayList<String> getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(ArrayList<String> feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getCustomerRating() {
+        return customerRating;
+    }
+
+    public void setCustomerRating(int customerRating) {
+        this.customerRating = customerRating;
+    }
+
+    public int getNumOfRatings() {
+        return numOfRatings;
+    }
+
+    public void setNumOfRatings(int numOfRatings) {
+        this.numOfRatings = numOfRatings;
     }
 }

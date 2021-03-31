@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">SoftwarePatternsCA2</string>
+
+    <string-array name="filters">
+        <item>All Items</item>
+        <item>Category</item>
+        <item>Manufacturer</item>
+        <item>Title</item>
+        <item>Price</item>
+    </string-array>
+
+    <string-array name="Categories">
+        <item>Television</item>
+        <item>Radio</item>
+        <item>Smartphone</item>
+        <item>Printer</item>
+        <item>Camera</item>
+    </string-array>
+
+    <string-array name="Manufacturers">
+        <item>Sony</item>
+        <item>Toshiba</item>
+        <item>Canon</item>
+        <item>Apple</item>
+        <item>Samsung</item>
+    </string-array>
+
+    <string-array name="order">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
 </resources>

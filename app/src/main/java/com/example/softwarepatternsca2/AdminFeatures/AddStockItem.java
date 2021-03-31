@@ -38,7 +38,7 @@ public class AddStockItem extends AppCompatActivity {
     private ImageView ivImage;
     private static final String StockItem = "StockItem";
     private static final int PICK_IMAGE_REQUEST =22 ;
-    private EditText e1, e2,e3,e4;
+    private EditText e1, e2,e3,e4,e5;
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private FirebaseUser user;
@@ -64,25 +64,34 @@ public class AddStockItem extends AppCompatActivity {
         e2 = (EditText) findViewById(R.id.editCategory);
         e3=(EditText)findViewById(R.id.editManufacture) ;
         e4 = (EditText) findViewById(R.id.editPrice);
+        e5 = (EditText) findViewById(R.id.stockAmount);
+
         uploadImage();
         String keyId = dbRef.push().getKey();
 
-        // String strUrl = url.getText().toString();
 
         String title = e1.getText().toString();
         String category = e2.getText().toString();
         String manufacturer = e3.getText().toString();
         int price=Integer.parseInt(e4.getText().toString());
+        int stockNum=Integer.parseInt(e5.getText().toString());
         String itemId=keyId;
         String imageUrl=picPath;
 
-        StockItem stockItem= new StockItem( title,  manufacturer,  price,  category,  imageUrl,  itemId);
-        dbRef.child(keyId).setValue(stockItem);
+        if((title.isEmpty())|| (manufacturer.isEmpty())||(e4.getText().toString().isEmpty())||(category.isEmpty())||(imageUrl.isEmpty())||(itemId.isEmpty())){
 
-        Toast.makeText(getApplicationContext(), "Item successfully created ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error : All fields must be filled ", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(), WelcomeAdmin.class);
-        startActivity(intent);
+        }else{
+            StockItem stockItem= new StockItem( title,  manufacturer,  price,  category,  imageUrl,  itemId,stockNum);
+            dbRef.child(keyId).setValue(stockItem);
+
+            Toast.makeText(getApplicationContext(), "Item successfully created ", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(getApplicationContext(), WelcomeAdmin.class);
+            startActivity(intent);
+        }
+
 
 
     }

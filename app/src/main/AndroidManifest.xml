@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SoftwarePatternsCA2">
-        <activity android:name=".CustomerFeatures.BrowseItems"></activity>
+        <activity android:name=".CustomerFeatures.SelectedStockItem"></activity>
+        <activity android:name=".CustomerFeatures.BrowseItems" />
         <activity android:name=".AdminFeatures.AddStockItem" />
         <activity android:name=".AdminFeatures.WelcomeAdmin" />
         <activity android:name=".CustomerFeatures.WelcomeCustomer" />
