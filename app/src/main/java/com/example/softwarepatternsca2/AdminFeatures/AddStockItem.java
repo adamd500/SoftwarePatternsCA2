@@ -78,12 +78,12 @@ public class AddStockItem extends AppCompatActivity {
         String itemId=keyId;
         String imageUrl=picPath;
 
-        if((title.isEmpty())|| (manufacturer.isEmpty())||(e4.getText().toString().isEmpty())||(category.isEmpty())||(imageUrl.isEmpty())||(itemId.isEmpty())){
+        if((title.isEmpty())|| (manufacturer.isEmpty())||(e4.getText().toString().isEmpty())||(category.isEmpty())||(imageUrl.isEmpty())){
 
             Toast.makeText(getApplicationContext(), "Error : All fields must be filled ", Toast.LENGTH_SHORT).show();
 
         }else{
-            StockItem stockItem= new StockItem( title,  manufacturer,  price,  category,  imageUrl,  itemId,stockNum);
+            StockItem stockItem= new StockItem( title,  manufacturer,  price,  category,  imageUrl,  itemId,stockNum,false);
             dbRef.child(keyId).setValue(stockItem);
 
             Toast.makeText(getApplicationContext(), "Item successfully created ", Toast.LENGTH_SHORT).show();
@@ -130,7 +130,6 @@ public class AddStockItem extends AppCompatActivity {
     public void uploadImage() {
         if (filePath != null) {
 
-            // Code for showing progressDialog while uploading
             ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
@@ -144,8 +143,6 @@ public class AddStockItem extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     progressDialog.dismiss();
-                                    // dbRef.child("User").child(uid).child("profileImageUri").setValue(filePath);
-
                                     Toast.makeText(getApplicationContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
                                 }
                             })

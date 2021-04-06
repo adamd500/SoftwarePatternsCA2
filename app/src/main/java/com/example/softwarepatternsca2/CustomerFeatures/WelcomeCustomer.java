@@ -42,7 +42,7 @@ public class WelcomeCustomer extends AppCompatActivity {
     }
 
     private void getCustomer() {
-        ref.child("Customer").addValueEventListener(new ValueEventListener() {
+        ref.child("Customer").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
@@ -72,6 +72,11 @@ public class WelcomeCustomer extends AppCompatActivity {
 
     public void viewItems(View view) {
         Intent intent = new Intent(this,BrowseItems.class);
+        startActivity(intent);
+    }
+
+    public void viewCart(View view) {
+        Intent intent = new Intent(this,ViewCart.class);
         startActivity(intent);
     }
 }

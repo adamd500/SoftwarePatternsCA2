@@ -3,7 +3,7 @@ package com.example.softwarepatternsca2.ObjectClasses;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockItem {
+public class StockItem implements Comparable<StockItem>{
 
     String title;
     String manufacturer;
@@ -15,12 +15,13 @@ public class StockItem {
     ArrayList<String> feedback=new ArrayList<String>();
     int customerRating;
     int numOfRatings;
+    boolean removed;
 
     public StockItem(){
 
     }
 
-    public StockItem(String title, String manufacturer, int price, String category, String imageUrl, String itemId, int stockAmount) {
+    public StockItem(String title, String manufacturer, int price, String category, String imageUrl, String itemId, int stockAmount, boolean removed) {
         this.title = title;
         this.manufacturer = manufacturer;
         this.price = price;
@@ -28,6 +29,7 @@ public class StockItem {
         this.imageUrl = imageUrl;
         this.itemId = itemId;
         this.stockAmount = stockAmount;
+        this.removed = removed;
     }
 
     public String getTitle() {
@@ -108,5 +110,51 @@ public class StockItem {
 
     public void setNumOfRatings(int numOfRatings) {
         this.numOfRatings = numOfRatings;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    @Override
+    public int compareTo(StockItem o) {
+
+//        int compareInt =this.manufacturer.compareTo(o.getManufacturer());
+//        if(compareInt<0)return -1;
+//        if(compareInt>0)return 1;
+        return 0;
+    }
+
+    public int compareManufacture(StockItem o){
+        int compareInt =this.manufacturer.compareTo(o.getManufacturer());
+        if(compareInt<0)return -1;
+        if(compareInt>0)return 1;
+        return 0;
+    }
+
+    public int compareTitle(StockItem o){
+        int compareInt =this.title.compareTo(o.getTitle());
+        if(compareInt<0)return -1;
+        if(compareInt>0)return 1;
+        return 0;
+    }
+
+    public int compareCategory(StockItem o){
+        int compareInt =this.category.compareTo(o.getCategory());
+        if(compareInt<0)return -1;
+        if(compareInt>0)return 1;
+        return 0;
+    }
+
+    public int comparePrice(StockItem o){
+
+        int compareInt =String.valueOf(this.price).compareTo(String.valueOf(o.getPrice()));
+        if(compareInt<0)return -1;
+        if(compareInt>0)return 1;
+        return 0;
     }
 }

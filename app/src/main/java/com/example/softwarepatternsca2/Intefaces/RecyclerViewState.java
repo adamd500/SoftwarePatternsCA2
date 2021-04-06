@@ -4,8 +4,8 @@ public interface RecyclerViewState {
 
     void ascending();
     void descending();
-    void byCategory();
-    void byPrice();
-    void byManufacturer();
-    void byTitle();
+//    void byCategory();
+//    void byPrice();
+//    void byManufacturer();
+//    void byTitle();
 }

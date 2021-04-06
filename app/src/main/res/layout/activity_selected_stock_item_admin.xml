@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerFeatures.SelectedStockItem">
+    tools:context=".AdminFeatures.SelectedStockItemAdmin">
 
     <TextView
         android:id="@+id/txtViewManuf"
@@ -28,6 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylcerView"
         android:layout_width="400dp"
@@ -39,7 +40,7 @@
         app:layout_constraintBottom_toTopOf="@+id/sendMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewFeedback"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/txtViewFeedback"
@@ -52,20 +53,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.754" />
+        app:layout_constraintVertical_bias="0.707" />
 
     <TextView
         android:id="@+id/txtViewRatings"
         android:layout_width="380dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="16dp"
         android:text="Average Customer Rating :"
         android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.694" />
-
+        app:layout_constraintVertical_bias="0.664" />
 
     <TextView
         android:id="@+id/txtViewCategory"
@@ -96,12 +96,24 @@
         android:layout_width="411dp"
         android:layout_height="47dp"
         android:layout_marginLeft="8dp"
-        android:onClick="addToCart"
-        android:text="Add to Cart "
+        android:onClick="removeItem"
+        android:text="Remove Item from Store"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.992" />
+
+    <Button
+        android:id="@+id/sendMessage1"
+        android:layout_width="411dp"
+        android:layout_height="47dp"
+        android:layout_marginLeft="8dp"
+        android:onClick="editItem"
+        android:text="Edit Item Details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.923" />
 
     <ImageView
         android:id="@+id/imageView"

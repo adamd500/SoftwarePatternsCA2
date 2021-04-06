@@ -1,12 +1,14 @@
 package com.example.softwarepatternsca2.CustomerFeatures;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,16 +31,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BrowseItems extends AppCompatActivity implements RecyclerViewState {
 
     ArrayList<StockItem> stockItems = new ArrayList<StockItem>();
-    List<StockItem> sortedByPrice=new ArrayList<StockItem>();
-
     private FirebaseDatabase database;
     private DatabaseReference ref;
-
-    AllStockItemsAdapter myAdapter;
+    static AllStockItemsAdapter myAdapter;
     private FirebaseUser user;
     String uid;
     Spinner filters,order;
@@ -47,6 +47,7 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
     String keyword;
     EditText e1;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,19 +73,82 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
         myAdapter = new AllStockItemsAdapter(stockItems);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(myAdapter);
+
+        ascending();
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void ascending() {
 
-        Collections.sort(stockItems, new Comparator<StockItem>() {
+
+
+        //orderSelected=order.getSelectedItemPosition();
+        filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public int compare(StockItem o1, StockItem o2) {
-                return Integer.valueOf(o1.getPrice()).compareTo(Integer.valueOf(o2.getPrice()));
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSelected = filters.getSelectedItemPosition();
+                if(filterSelected==0){
+                    stockItems.clear();
+                    getItems("all");
+                }
+
+                if(filterSelected==1){
+
+                    List<StockItem>ascendingItems=stockItems.stream().sorted((o1, o2) -> o1.compareCategory(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for(StockItem item : ascendingItems){
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
+                }
+                if(filterSelected==2){
+
+                    // byManufacturer();
+                    List<StockItem>ascendingItems=stockItems.stream().sorted((o1, o2) -> o1.compareManufacture(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for(StockItem item : ascendingItems){
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+                }
+
+                if(filterSelected==3){
+
+                    List<StockItem>ascendingItems=stockItems.stream().sorted((o1, o2) -> o1.compareTitle(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for(StockItem item : ascendingItems){
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
+                }
+
+                if(filterSelected==4){
+
+                    List<StockItem>ascendingItems=stockItems.stream().sorted((o1, o2) -> o1.comparePrice(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for(StockItem item : ascendingItems){
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);        }
+
             }
-        });
-        //stockItems.sort();
+         @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
+    });
     }
 
     @Override
@@ -92,105 +156,6 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
 
     }
 
-    @Override
-    public void byCategory() {
-
-      //  ArrayList<StockItem>selectedCategory=new ArrayList<>();
-        myAdapter.notifyDataSetChanged();
-        stockItems.clear();
-        myAdapter.notifyDataSetChanged();
-
-        ref.child("StockItem").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> children = snapshot.getChildren();
-                for (DataSnapshot child : children) {
-                    StockItem stockItem = child.getValue(StockItem.class);
-
-                    if(stockItem.getCategory().contains(keyword)||stockItem.getCategory().equalsIgnoreCase(keyword)){
-                        stockItems.add(stockItem);
-                    }
-
-
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //   Log.m("DBE Error","Cancel Access DB");
-            }
-        });
-    }
-
-    @Override
-    public void byPrice() {
-
-        if(orderSelected==0){
-            ascending();
-        }
-
-    }
-
-    @Override
-    public void byManufacturer() {
-        myAdapter.notifyDataSetChanged();
-        stockItems.clear();
-        myAdapter.notifyDataSetChanged();
-
-        ref.child("StockItem").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> children = snapshot.getChildren();
-                for (DataSnapshot child : children) {
-                    StockItem stockItem = child.getValue(StockItem.class);
-
-                    if(keyword.equalsIgnoreCase(stockItem.getManufacturer())){
-                        stockItems.add(stockItem);
-                    }
-
-
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //   Log.m("DBE Error","Cancel Access DB");
-            }
-        });
-    }
-
-    @Override
-    public void byTitle() {
-
-        myAdapter.notifyDataSetChanged();
-        stockItems.clear();
-        myAdapter.notifyDataSetChanged();
-
-        ref.child("StockItem").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Iterable<DataSnapshot> children = snapshot.getChildren();
-                for (DataSnapshot child : children) {
-                    StockItem stockItem = child.getValue(StockItem.class);
-
-                    if(stockItem.getTitle().contains(keyword)||stockItem.getTitle().equalsIgnoreCase(keyword)){
-                        stockItems.add(stockItem);
-                    }
-
-
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //   Log.m("DBE Error","Cancel Access DB");
-            }
-        });
-
-    }
 
     public void getItems(String filter) {
         ref.child("StockItem").addValueEventListener(new ValueEventListener() {
@@ -199,12 +164,13 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
                     StockItem stockItem = child.getValue(StockItem.class);
+                    if (!stockItem.isRemoved()&&stockItem.getStockAmount()>0) {
+                        if (filter.equalsIgnoreCase("all")) {
+                            stockItems.add(stockItem);
+                        }
 
-                    if(filter.equalsIgnoreCase("all")){
-                        stockItems.add(stockItem);
+                        myAdapter.notifyItemInserted(stockItems.size() - 1);
                     }
-
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
                 }
             }
 
@@ -215,42 +181,12 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void filter(View view) {
 
         keyword=e1.getText().toString();
-        orderSelected=order.getSelectedItemPosition();
-        filterSelected=filters.getSelectedItemPosition();
 
 
 
-        if(filterSelected==0){
-            getItems("all");
-        }
-        if(filterSelected==1){
-            byCategory();
-        }
-        if(filterSelected==2){
-            byManufacturer();
-        }
-        if(filterSelected==3){
-            byTitle();
-        }
-
-        if(filterSelected==4){
-            byPrice();
-        }
-
-
-        if(orderSelected==0){
-             ascending();
-        }
-        if(orderSelected==1){
-            // descending();
-        }
-//         <item>All Items</item>
-//        <item>Category</item>
-//        <item>Manufacturer</item>
-//        <item>Title</item>
-//        <item>Price</item>
     }
 }

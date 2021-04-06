@@ -20,4 +20,9 @@ public class WelcomeAdmin extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(),AddStockItem.class);
         startActivity(intent);
     }
+
+    public void viewAllItems(View view) {
+        Intent intent = new Intent(getApplicationContext(),ViewStockedItems.class);
+        startActivity(intent);
+    }
 }
