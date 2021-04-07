@@ -7,14 +7,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.softwarepatternsca2.Adapters.AllStockItemsAdapter;
 import com.example.softwarepatternsca2.Adapters.AllStockItemsAdminAdapter;
+import com.example.softwarepatternsca2.Intefaces.RecyclerViewState;
 import com.example.softwarepatternsca2.ObjectClasses.StockItem;
 import com.example.softwarepatternsca2.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class ViewStockedItems extends AppCompatActivity {
+public class ViewStockedItems extends AppCompatActivity implements RecyclerViewState {
 
     ArrayList<StockItem> stockItems = new ArrayList<StockItem>();
     private FirebaseDatabase database;
@@ -96,6 +101,84 @@ public class ViewStockedItems extends AppCompatActivity {
         keyword=e1.getText().toString();
 
 
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void ascending() {
+
+
+        //orderSelected=order.getSelectedItemPosition();
+        filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSelected = filters.getSelectedItemPosition();
+                if (filterSelected == 0) {
+                    stockItems.clear();
+                    getItems();
+                }
+
+                if (filterSelected == 1) {
+
+                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareCategory(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for (StockItem item : ascendingItems) {
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
+                }
+                if (filterSelected == 2) {
+
+                    // byManufacturer();
+                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareManufacture(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for (StockItem item : ascendingItems) {
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+                }
+
+                if (filterSelected == 3) {
+
+                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareTitle(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for (StockItem item : ascendingItems) {
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
+                }
+
+                if (filterSelected == 4) {
+
+                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.comparePrice(o2)).collect(Collectors.toList());
+                    myAdapter.notifyDataSetChanged();
+                    stockItems.clear();
+                    for (StockItem item : ascendingItems) {
+                        stockItems.add(item);
+                    }
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+    @Override
+    public void descending() {
 
     }
 }

@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.softwarepatternsca2.Intefaces.PersonType;
-import com.example.softwarepatternsca2.ObjectClasses.Customer;
-import com.example.softwarepatternsca2.ObjectClasses.Person;
-import com.example.softwarepatternsca2.R;
+import com.example.softwarepatternsca2.AdminFeatures.WelcomeAdmin;
 import com.example.softwarepatternsca2.CustomerFeatures.WelcomeCustomer;
+import com.example.softwarepatternsca2.Intefaces.PersonType;
+import com.example.softwarepatternsca2.ObjectClasses.Admin;
+import com.example.softwarepatternsca2.ObjectClasses.Customer;
+import com.example.softwarepatternsca2.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,63 +25,71 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegisterCustomer extends AppCompatActivity {
-    private static final String USER = "User";
-    private static final String TAG = "RegisterCustomer";
+public class RegisterAdmin extends AppCompatActivity {
 
+    private static final String USER = "User";
+    private static final String TAG = "RegisterAdmin";
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseDatabase database;
     private DatabaseReference mDatabase;
     String email;
     String uid;
-    Customer customer;
-
+    Admin admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_customer);
+        setContentView(R.layout.activity_register_admin);
+
 
         database = FirebaseDatabase.getInstance();
         mDatabase = database.getReference(USER);
         mAuth = FirebaseAuth.getInstance();
     }
+    public void createAdmin(View v){
 
-    public void createCustomer(View v) {
-        EditText nameTxt = (EditText) findViewById(R.id.name);
-        EditText addressTxt = (EditText) findViewById(R.id.address);
-        EditText locationTxt = (EditText) findViewById(R.id.location);
-        EditText numberTxt = (EditText) findViewById(R.id.number);
-        EditText emailTxt = (EditText) findViewById(R.id.email);
-        EditText passwordTxt = (EditText) findViewById(R.id.password);
-        EditText passwordTxt2 = (EditText) findViewById(R.id.password2);
+    EditText code =(EditText)findViewById(R.id.code);
+    EditText nameTxt = (EditText) findViewById(R.id.name);
+    EditText addressTxt = (EditText) findViewById(R.id.address);
+    EditText locationTxt = (EditText) findViewById(R.id.location);
+    EditText numberTxt = (EditText) findViewById(R.id.number);
+    EditText emailTxt = (EditText) findViewById(R.id.email);
+    EditText passwordTxt = (EditText) findViewById(R.id.password);
+    EditText passwordTxt2 = (EditText) findViewById(R.id.password2);
 
 
-        email = emailTxt.getText().toString();
-        String password = passwordTxt.getText().toString();
-        String password2 = passwordTxt2.getText().toString();
-        String address = addressTxt.getText().toString();
-        String location = locationTxt.getText().toString();
-        String number = numberTxt.getText().toString();
-        String name = nameTxt.getText().toString();
+    email = emailTxt.getText().toString();
+    String password = passwordTxt.getText().toString();
+    String password2 = passwordTxt2.getText().toString();
+    String address = addressTxt.getText().toString();
+    String location = locationTxt.getText().toString();
+    String number = numberTxt.getText().toString();
+    String name = nameTxt.getText().toString();
+    String code1=code.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)  || TextUtils.isEmpty(address) || TextUtils.isEmpty(location)
-                || TextUtils.isEmpty(number) || TextUtils.isEmpty(name)|| TextUtils.isEmpty(name)|| TextUtils.isEmpty(password2)||!password.equals(password2)) {
+    if(code1.equalsIgnoreCase("1005")) {
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(address) || TextUtils.isEmpty(location)
+                || TextUtils.isEmpty(number) || TextUtils.isEmpty(name) || TextUtils.isEmpty(name) || TextUtils.isEmpty(password2) || !password.equals(password2)) {
             Toast.makeText(getApplicationContext(), "Please ensure all fields are completed and that passwords match",
                     Toast.LENGTH_SHORT).show();
             return;
-        }else {
+        } else {
 
-            customer = new Customer( name,number,  address,  location,  email, new PersonType.isCustomer().type(),
-                    "customerId",  "cardNumber",  "securityCode",
-                    "cardExpiry", false , 0,false);
-            registerCustomer(email, password);
+            admin = new Admin(name, number, address, location, email, new PersonType.isAdmin().type(),
+                    "adminId");
+
+            registerAdmin(email, password);
 
         }
-    }
+    }else{
+        Toast.makeText(getApplicationContext(), "Authorisation Code is Incorrect.", Toast.LENGTH_SHORT).show();
 
-    public void registerCustomer(String email, String password) {
+    }
+}
+
+    public void registerAdmin(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -101,10 +110,10 @@ public class RegisterCustomer extends AppCompatActivity {
     public void updateUI(FirebaseUser currentUser){
 
         uid=currentUser.getUid();
-        customer.setCustomerId(uid);
-        mDatabase.child(uid).setValue(customer);
+        admin.setAdminId(uid);
+        mDatabase.child(uid).setValue(admin);
 
-        Intent welcomeIntent = new Intent(this, WelcomeCustomer.class);
+        Intent welcomeIntent = new Intent(this, WelcomeAdmin.class);
         startActivity(welcomeIntent);
     }
 

@@ -33,6 +33,7 @@ public class PaymentPage extends AppCompatActivity {
     private DatabaseReference ref;
     TextView t1, t2, t3, t4;
     EditText e1, e2, e3;
+    int totalOfItems = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,11 @@ public class PaymentPage extends AppCompatActivity {
                         }
 
                         //Get and calculate price
-                        int totalOfItems = 0;
+                        totalOfItems = 0;
                         for (StockItem myItem : cart.getItems()) {
                             totalOfItems = totalOfItems + myItem.getPrice();
                         }
-                        t1.setText("Price of Items : "+String.valueOf(totalOfItems));
+                        t1.setText("Price of Items : " + String.valueOf(totalOfItems));
 
                         int shipping = 0;
                         if (totalOfItems > 70) {
@@ -92,18 +93,18 @@ public class PaymentPage extends AppCompatActivity {
                         double discount = 0.0;
                         if (!cart.getCustomer().isNewUserDiscountUsed()) {
                             t2.setText("Discount : 10% New User Discount Applied");
-                            ref.child("Customer").child(uid).child("newUserDiscountUsed").setValue(true);
+                            ref.child("User").child(uid).child("newUserDiscountUsed").setValue(true);
                             ref.child("Cart").child(cart.getCartId()).child("customer").child("newUserDiscountUsed").setValue(true);
 
                             discount = 0.9;
                         }
 
-                        if(discount!=0.0){
-                            int total = (int) ((totalOfItems + shipping) * discount);
-                            t4.setText("Order Total :"+String.valueOf(total));
-                        }else{
-                            int total1=totalOfItems+shipping;
-                            t4.setText("Order Total :"+String.valueOf(total1));
+                        if (discount != 0.0) {
+                            totalOfItems = (int) ((totalOfItems + shipping) * discount);
+                            t4.setText("Order Total :" + String.valueOf(totalOfItems));
+                        } else {
+                            totalOfItems = totalOfItems + shipping;
+                            t4.setText("Order Total :" + String.valueOf(totalOfItems));
 
                         }
 
@@ -120,33 +121,27 @@ public class PaymentPage extends AppCompatActivity {
     }
 
     public void pay(View view) {
-        ref.child("Customer").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child("User").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-              //  Iterable<DataSnapshot> children = snapshot.getChildren();
-                //for (DataSnapshot child : children) {
-                    Customer customer = snapshot.getValue(Customer.class);
-                   // if (customer.getCustomerId().equals(uid)) {
 
-                        setCartInactive();
-                        customer.setCardExpiry(e2.getText().toString());
-                        customer.setCardNumber(e1.getText().toString());
-                        customer.setSecurityCode(e3.getText().toString());
-                        int numOrders=customer.getNumOfOrders();
-                        numOrders=numOrders+1;
-                        customer.setNumOfOrders(numOrders);
-                        customer.setHasNewCart(false);
-                        ref.child("Customer").child(uid).setValue(customer);
+                Customer customer = snapshot.getValue(Customer.class);
 
+                setCartInactive();
+                customer.setCardExpiry(e2.getText().toString());
+                customer.setCardNumber(e1.getText().toString());
+                customer.setSecurityCode(e3.getText().toString());
+                int numOrders = customer.getNumOfOrders();
+                numOrders = numOrders + 1;
+                customer.setNumOfOrders(numOrders);
+                customer.setHasNewCart(false);
+                ref.child("User").child(uid).setValue(customer);
 
-                        Toast.makeText(getApplicationContext(), "Order Complete, Thank You! ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Order Complete, Thank You! ", Toast.LENGTH_SHORT).show();
 
-                        Intent intent= new Intent(getApplicationContext(),WelcomeCustomer.class);
-                        startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), WelcomeCustomer.class);
+                startActivity(intent);
 
-                   // }
-
-              //  }
             }
 
             @Override
@@ -154,8 +149,7 @@ public class PaymentPage extends AppCompatActivity {
                 //   Log.m("DBE Error","Cancel Access DB");
             }
         });
-
-
+        
     }
 
     public void setCartInactive() {
@@ -168,8 +162,9 @@ public class PaymentPage extends AppCompatActivity {
                     if (cart.isActive()) {
 
                         ViewCart.myAdapter.notifyDataSetChanged();
-                         ref.child("Cart").child(cart.getCartId()).child("active").setValue(false);
-                         ref.child("Customer").child(cart.getCustomer().getCustomerId()).child("hasNewCart").setValue(false);
+                        ref.child("Cart").child(cart.getCartId()).child("active").setValue(false);
+                        ref.child("Cart").child(cart.getCartId()).child("total").setValue(totalOfItems);
+                        ref.child("User").child(cart.getCustomer().getCustomerId()).child("hasNewCart").setValue(false);
                     }
 
                 }

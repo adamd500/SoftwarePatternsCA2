@@ -60,4 +60,9 @@ public class AdminLogin extends AppCompatActivity {
 
 
     }
+
+    public void register(View view) {
+        Intent intent = new Intent(AdminLogin.this, RegisterAdmin.class);
+        startActivity(intent);
+    }
 }

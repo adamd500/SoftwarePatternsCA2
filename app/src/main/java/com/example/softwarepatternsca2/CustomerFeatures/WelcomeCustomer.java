@@ -42,7 +42,7 @@ public class WelcomeCustomer extends AppCompatActivity {
     }
 
     private void getCustomer() {
-        ref.child("Customer").addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.child("User").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
@@ -55,7 +55,7 @@ public class WelcomeCustomer extends AppCompatActivity {
                           //  items.add(new StockItem());
                             Cart cart = new Cart( 0, items,  customer,  true,keyId);
                             ref2.child(keyId).setValue(cart);
-                            ref.child("Customer").child(uid).child("hasNewCart").setValue(true);
+                            ref.child("User").child(uid).child("hasNewCart").setValue(true);
                         }
 
                     }
