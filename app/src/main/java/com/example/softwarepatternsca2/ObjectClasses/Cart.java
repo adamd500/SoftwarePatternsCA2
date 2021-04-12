@@ -9,6 +9,7 @@ public class Cart {
     Customer customer ;
     boolean active;
     String cartId;
+    String timeOfOrder;
 
     public Cart(int total, ArrayList<StockItem> items, Customer customer, boolean active, String cartId) {
         this.total = total;
@@ -20,6 +21,14 @@ public class Cart {
 
     public Cart() {
 
+    }
+
+    public String getTimeOfOrder() {
+        return timeOfOrder;
+    }
+
+    public void setTimeOfOrder(String timeOfOrder) {
+        this.timeOfOrder = timeOfOrder;
     }
 
     public int getTotal() {

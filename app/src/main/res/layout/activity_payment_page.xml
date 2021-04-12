@@ -12,6 +12,8 @@
         android:layout_height="39dp"
         android:gravity="center"
         android:text="Payment"
+        android:textColor="@color/black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -23,6 +25,8 @@
         android:layout_height="39dp"
         android:layout_marginTop="8dp"
         android:text="Shipping :"
+        android:textColor="@color/black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +38,8 @@
         android:layout_height="39dp"
         android:layout_marginTop="10dp"
         android:text="Items Total :"
+        android:textColor="@color/black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +49,8 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="39dp"
+        android:textColor="@color/black"
+
         android:layout_marginTop="13dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -51,13 +59,16 @@
 
     <TextView
         android:id="@+id/textViewDiscount"
-        android:layout_width="match_parent"
-        android:layout_height="39dp"
+        android:layout_width="236dp"
+        android:layout_height="37dp"
+        android:textColor="@color/black"
+
         android:text="Discount :"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewItemTotal" />
+
 
 
     <TextView
@@ -66,6 +77,8 @@
         android:layout_height="39dp"
         android:layout_marginTop="4dp"
         android:text="Total :"
+        android:textColor="@color/black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

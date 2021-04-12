@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerFeatures.SelectedStockItem">
-
+    tools:context=".CustomerFeatures.SelectedPreviousItem">
     <TextView
         android:id="@+id/txtViewManuf"
         android:layout_width="380dp"
         android:layout_height="30dp"
         android:layout_marginLeft="16dp"
         android:textSize="20dp"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,64 +27,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylcerView"
-        android:layout_width="400dp"
-        android:layout_height="104dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/sendMessage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewRatings"
-        app:layout_constraintVertical_bias="0.967" />
-
-    <TextView
-        android:id="@+id/txtViewFeedback"
-        android:layout_width="380dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="8dp"
-        android:gravity="center"
-        android:text="Feedback from Customers"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.669" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="140dp"
-        android:layout_height="43dp"
-        android:layout_marginLeft="8dp"
-        android:gravity="center"
-        android:text="Average Score"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.744" />
-
-    <RatingBar
-        android:id="@+id/txtViewRatings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="12dp"
-        android:clickable="false"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:isIndicator="true"
-        android:numStars="5"
-        android:scaleX=".6"
-        android:scaleY=".6"
-        android:stepSize="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewFeedback" />
 
     <TextView
         android:id="@+id/txtViewCategory"
@@ -112,17 +52,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.6" />
 
-    <Button
+    <TextView
         android:id="@+id/sendMessage"
         android:layout_width="411dp"
         android:layout_height="47dp"
         android:layout_marginLeft="8dp"
-        android:onClick="addToCart"
-        android:text="Add to Cart "
+        android:gravity="center"
+        android:text="Leave Feedback "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.992" />
+        app:layout_constraintVertical_bias="0.685" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -135,4 +75,42 @@
         app:layout_constraintTop_toBottomOf="@+id/txtViewTitle"
         app:layout_constraintVertical_bias="0.0"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <EditText
+        android:id="@+id/review"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_marginTop="23dp"
+        android:hint="Review"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sendMessage" />
+
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="14dp"
+        android:numStars="5"
+        android:scaleX=".6"
+        android:scaleY=".6"
+        android:stepSize="1.0"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/review"
+        tools:layout_editor_absoluteX="71dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="383dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="8dp"
+        android:onClick="submitFeedback"
+        android:text="Submit "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.956" />
 </androidx.constraintlayout.widget.ConstraintLayout>

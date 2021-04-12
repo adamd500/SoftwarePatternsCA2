@@ -29,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +42,7 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
     static AllStockItemsAdminAdapter myAdapter;
     private FirebaseUser user;
     String uid;
-    Spinner filters,order;
+    Spinner filters, order;
     int filterSelected;
     int orderSelected;
     String keyword;
@@ -51,9 +53,9 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_stocked_items);
 
-        filters=findViewById(R.id.filter);
-        order=findViewById(R.id.order);
-        e1=findViewById(R.id.variant);
+        filters = findViewById(R.id.filter);
+        order = findViewById(R.id.order);
+        e1 = findViewById(R.id.variant);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
@@ -71,6 +73,25 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
         myAdapter = new AllStockItemsAdminAdapter(stockItems);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(myAdapter);
+
+        order.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSelected = filters.getSelectedItemPosition();
+
+                if (filterSelected == 0) {
+                    ascending();
+                }
+
+                if (filterSelected == 1) {
+                    descending();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     public void getItems() {
@@ -82,12 +103,13 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
 
                     StockItem stockItem = child.getValue(StockItem.class);
 
-                    if(!stockItem.isRemoved()){
+                    if (!stockItem.isRemoved()) {
                         stockItems.add(stockItem);
                     }
                     myAdapter.notifyItemInserted(stockItems.size() - 1);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 //   Log.m("DBE Error","Cancel Access DB");
@@ -95,19 +117,15 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void filter(View view) {
 
-        keyword=e1.getText().toString();
-
+        keyword = e1.getText().toString();
 
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void ascending() {
-
 
         //orderSelected=order.getSelectedItemPosition();
         filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -115,59 +133,111 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterSelected = filters.getSelectedItemPosition();
+
                 if (filterSelected == 0) {
-                    stockItems.clear();
-                    getItems();
+
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o1.getCategory().compareToIgnoreCase(o2.getCategory());
+                        }
+                    });
+                    myAdapter.notifyDataSetChanged();
                 }
 
                 if (filterSelected == 1) {
 
-                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareCategory(o2)).collect(Collectors.toList());
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o1.getManufacturer().compareToIgnoreCase(o2.getManufacturer());
+                        }
+                    });
                     myAdapter.notifyDataSetChanged();
-                    stockItems.clear();
-                    for (StockItem item : ascendingItems) {
-                        stockItems.add(item);
-                    }
-                    myAdapter.notifyDataSetChanged();
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
 
                 }
                 if (filterSelected == 2) {
 
-                    // byManufacturer();
-                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareManufacture(o2)).collect(Collectors.toList());
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o1.getTitle().compareToIgnoreCase(o2.getTitle());
+                        }
+                    });
                     myAdapter.notifyDataSetChanged();
-                    stockItems.clear();
-                    for (StockItem item : ascendingItems) {
-                        stockItems.add(item);
-                    }
-                    myAdapter.notifyDataSetChanged();
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
                 }
 
                 if (filterSelected == 3) {
 
-                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.compareTitle(o2)).collect(Collectors.toList());
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return String.valueOf(o1.getPrice()).compareToIgnoreCase(String.valueOf(o2.getPrice()));
+                        }
+                    });
                     myAdapter.notifyDataSetChanged();
-                    stockItems.clear();
-                    for (StockItem item : ascendingItems) {
-                        stockItems.add(item);
-                    }
-                    myAdapter.notifyDataSetChanged();
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
-
                 }
 
-                if (filterSelected == 4) {
+            }
 
-                    List<StockItem> ascendingItems = stockItems.stream().sorted((o1, o2) -> o1.comparePrice(o2)).collect(Collectors.toList());
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    @Override
+    public void descending() {
+
+        filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterSelected = filters.getSelectedItemPosition();
+                if (filterSelected == 0) {
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o2.getCategory().compareToIgnoreCase(o1.getCategory());
+                        }
+                    });
                     myAdapter.notifyDataSetChanged();
-                    stockItems.clear();
-                    for (StockItem item : ascendingItems) {
-                        stockItems.add(item);
-                    }
+                }
+
+                if (filterSelected == 1) {
+
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o2.getManufacturer().compareToIgnoreCase(o1.getManufacturer());
+                        }
+                    });
                     myAdapter.notifyDataSetChanged();
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+
+
+                }
+                if (filterSelected == 2) {
+
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return o2.getTitle().compareToIgnoreCase(o1.getTitle());
+                        }
+                    });
+                    myAdapter.notifyDataSetChanged();
+                }
+
+                if (filterSelected == 3) {
+                    Collections.sort(stockItems, new Comparator<StockItem>() {
+                        @Override
+                        public int compare(StockItem o1, StockItem o2) {
+                            return String.valueOf(o2.getPrice()).compareToIgnoreCase(String.valueOf(o1.getPrice()));
+                        }
+                    });
+                    myAdapter.notifyDataSetChanged();
                 }
 
             }
@@ -176,9 +246,5 @@ public class ViewStockedItems extends AppCompatActivity implements RecyclerViewS
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
-    @Override
-    public void descending() {
-
     }
 }

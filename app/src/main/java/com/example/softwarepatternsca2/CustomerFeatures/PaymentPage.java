@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.softwarepatternsca2.Intefaces.DiscountType;
 import com.example.softwarepatternsca2.ObjectClasses.Cart;
 import com.example.softwarepatternsca2.ObjectClasses.Customer;
 import com.example.softwarepatternsca2.ObjectClasses.StockItem;
@@ -24,6 +25,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class PaymentPage extends AppCompatActivity {
 
@@ -59,7 +65,7 @@ public class PaymentPage extends AppCompatActivity {
 
     private void getCart() {
 
-        ref.child("Cart").addValueEventListener(new ValueEventListener() {
+        ref.child("Cart").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
@@ -91,13 +97,34 @@ public class PaymentPage extends AppCompatActivity {
                         }
 
                         double discount = 0.0;
+
                         if (!cart.getCustomer().isNewUserDiscountUsed()) {
-                            t2.setText("Discount : 10% New User Discount Applied");
+                            t2.setText("Discount : New User Discount Applied");
                             ref.child("User").child(uid).child("newUserDiscountUsed").setValue(true);
                             ref.child("Cart").child(cart.getCartId()).child("customer").child("newUserDiscountUsed").setValue(true);
 
-                            discount = 0.9;
+                            discount = new DiscountType.newUserDiscount().discount();
                         }
+
+                        if(totalOfItems>3000){
+                            t2.setText("Discount : Bulk Order Discount Applied");
+                            discount= new DiscountType.bulkOrderDiscount().discount();
+
+                        }
+
+                        if(cart.getCustomer().getNumOfOrders()==10){
+
+                            t2.setText("Discount : 10 Orders Discount Applied");
+                            discount= new DiscountType.tenOrderDiscount().discount();
+                        }
+
+                        if(cart.getCustomer().getNumOfOrders()==20){
+
+                            t2.setText("Discount : 20 Orders Discount Applied");
+                            discount= new DiscountType.twentyOrderDiscount().discount();
+                        }
+
+
 
                         if (discount != 0.0) {
                             totalOfItems = (int) ((totalOfItems + shipping) * discount);
@@ -159,11 +186,22 @@ public class PaymentPage extends AppCompatActivity {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
                     Cart cart = child.getValue(Cart.class);
-                    if (cart.isActive()) {
+                    if (cart.getCustomer().getCustomerId().equals(uid)&&cart.isActive()) {
 
                         ViewCart.myAdapter.notifyDataSetChanged();
-                        ref.child("Cart").child(cart.getCartId()).child("active").setValue(false);
-                        ref.child("Cart").child(cart.getCartId()).child("total").setValue(totalOfItems);
+
+                        for(StockItem item : cart.getItems()){
+                            int newStockNum=item.getStockAmount()-1;
+                            ref.child("StockItem").child(item.getItemId()).child("stockAmount").setValue(newStockNum);
+                        }
+
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
+                        Date date = new Date();
+                        cart.setTimeOfOrder(formatter.format(date));
+                        cart.setActive(false);
+                        cart.setTotal(totalOfItems);
+                        ref.child("Cart").child(cart.getCartId()).setValue(cart);
+
                         ref.child("User").child(cart.getCustomer().getCustomerId()).child("hasNewCart").setValue(false);
                     }
 

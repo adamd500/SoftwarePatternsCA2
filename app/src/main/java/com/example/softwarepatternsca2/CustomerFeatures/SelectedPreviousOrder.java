@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
-import com.example.softwarepatternsca2.Adapters.AllStockItemsAdapter;
 import com.example.softwarepatternsca2.Adapters.CartAdapter;
+import com.example.softwarepatternsca2.Adapters.OrderItemsAdapter;
+import com.example.softwarepatternsca2.Adapters.PreviousOrderAdapterCustomer;
 import com.example.softwarepatternsca2.ObjectClasses.Cart;
 import com.example.softwarepatternsca2.ObjectClasses.StockItem;
 import com.example.softwarepatternsca2.R;
@@ -24,25 +24,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class ViewCart extends AppCompatActivity {
-    ArrayList<StockItem> stockItems = new ArrayList<StockItem>();
+public class SelectedPreviousOrder extends AppCompatActivity {
+
+    ArrayList<StockItem> items = new ArrayList<StockItem>();
     private FirebaseDatabase database;
     private DatabaseReference ref;
-    static CartAdapter myAdapter;
+    static OrderItemsAdapter myAdapter;
     private FirebaseUser user;
-    String uid;
+    String uid,orderId;
     TextView t1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_cart);
+        setContentView(R.layout.activity_selected_previous_order);
 
-        t1=(TextView)findViewById(R.id.textViewTotal);
+        Intent intent = getIntent();
+        orderId=intent.getStringExtra("id");
+
+
+        t1=(TextView)findViewById(R.id.total);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
@@ -55,31 +58,34 @@ public class ViewCart extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        myAdapter = new CartAdapter(stockItems);
+        myAdapter = new OrderItemsAdapter(items);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(myAdapter);
-        getCart();
+
+        getOrder();
     }
 
-    public void getCart() {
+    public void getOrder() {
         ref.child("Cart").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
+
                     Cart cart = child.getValue(Cart.class);
 
-                    if(cart.getCustomer().getCustomerId().equals(uid)&&cart.isActive()){
+                    if(cart.getCartId().equals(orderId)){
+                        t1.setText(String.valueOf(cart.getTotal()));
                         int total=0;
                         for(StockItem item:cart.getItems()){
-                            stockItems.add(item);
+                            items.add(item);
                             total=total+item.getPrice();
                         }
-                        t1.setText("Order Total : "+String.valueOf(total));
+                        t1.setText(String.valueOf(total));
 
                     }
 
-                    myAdapter.notifyItemInserted(stockItems.size() - 1);
+                    myAdapter.notifyItemInserted(items.size() - 1);
                 }
             }
 
@@ -88,10 +94,5 @@ public class ViewCart extends AppCompatActivity {
                 //   Log.m("DBE Error","Cancel Access DB");
             }
         });
-    }
-
-    public void pay(View view) {
-        Intent intent = new Intent(getApplicationContext(),PaymentPage.class);
-        startActivity(intent);
     }
 }

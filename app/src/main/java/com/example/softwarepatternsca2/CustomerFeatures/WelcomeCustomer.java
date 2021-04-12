@@ -48,16 +48,20 @@ public class WelcomeCustomer extends AppCompatActivity {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
                     if(child.getKey().equals(uid)){
+
                         Customer customer = child.getValue(Customer.class);
 
-                        if(!customer.isHasNewCart()){
-                            String keyId = ref2.push().getKey();
-                          //  items.add(new StockItem());
-                            Cart cart = new Cart( 0, items,  customer,  true,keyId);
-                            ref2.child(keyId).setValue(cart);
-                            ref.child("User").child(uid).child("hasNewCart").setValue(true);
-                        }
+                        if(customer.getType().equalsIgnoreCase("Customer")) {
 
+                            if (!customer.isHasNewCart()) {
+
+                                String keyId = ref2.push().getKey();
+                                //  items.add(new StockItem());
+                                Cart cart = new Cart(0, items, customer, true, keyId);
+                                ref2.child(keyId).setValue(cart);
+                                ref.child("User").child(uid).child("hasNewCart").setValue(true);
+                            }
+                        }
                     }
 
                 }
@@ -77,6 +81,11 @@ public class WelcomeCustomer extends AppCompatActivity {
 
     public void viewCart(View view) {
         Intent intent = new Intent(this,ViewCart.class);
+        startActivity(intent);
+    }
+
+    public void previousOrders(View view) {
+        Intent intent = new Intent(this,PreviousOrders.class);
         startActivity(intent);
     }
 }

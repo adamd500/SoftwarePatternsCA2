@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,9 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectedStockItem extends AppCompatActivity {
-    private TextView t1, t2, t3, t4,t5;
+    private TextView t1, t2, t3, t4;
     private ImageView imgView;
-
+    private RatingBar t5;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private FirebaseStorage storage;
@@ -61,8 +62,7 @@ public class SelectedStockItem extends AppCompatActivity {
         t2 = (TextView) findViewById(R.id.txtViewCategory);
         t3 = (TextView) findViewById(R.id.txtViewManuf);
         t4 = (TextView) findViewById(R.id.txtViewPrice);
-        t5=(TextView)findViewById(R.id.txtViewRatings);
-        //  button = (Button) findViewById(R.id.consultationButton);
+        t5=(RatingBar)findViewById(R.id.txtViewRatings);
         imgView = (ImageView) findViewById(R.id.imageView);
 
         storage = FirebaseStorage.getInstance();
@@ -92,16 +92,22 @@ public class SelectedStockItem extends AppCompatActivity {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
                     if (child.getKey().equals(stockItemId)) {
+
                         stockItem = child.getValue(StockItem.class);
                         if(stockItem.getFeedback()!=null){
+
                             for(String comment:stockItem.getFeedback()){
+
                                 feedbackComments.add(comment);
                             }
+
                             myAdapter.notifyItemInserted(feedbackComments.size() - 1);
                         }
                         if(stockItem.getNumOfRatings()!=0&&stockItem.getCustomerRating()!=0){
+
                             int average=stockItem.getCustomerRating()/stockItem.getNumOfRatings();
-                            t5.setText("Average Customer Rating"+String.valueOf(average));
+
+                            t5.setRating(average);
                         }
                         photoUrl = stockItem.getImageUrl();
                         displayListing();
@@ -151,6 +157,7 @@ public class SelectedStockItem extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
+
                     StockItem item = child.getValue(StockItem.class);
                     if (item.getItemId().equals(stockItemId)) {
                         add(item);
@@ -171,7 +178,7 @@ public class SelectedStockItem extends AppCompatActivity {
                 Iterable<DataSnapshot> children = snapshot.getChildren();
                 for (DataSnapshot child : children) {
                     Cart cart = child.getValue(Cart.class);
-                    if (cart.getCustomer().getCustomerId().equals(uid)) {
+                    if (cart.getCustomer().getCustomerId().equals(uid)&& cart.isActive()) {
 
                         if(cart.getItems()==null){
                             ArrayList<StockItem>items = new ArrayList<>();
