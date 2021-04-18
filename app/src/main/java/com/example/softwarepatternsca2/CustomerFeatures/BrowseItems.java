@@ -34,7 +34,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BrowseItems extends AppCompatActivity implements RecyclerViewState {
+public class  BrowseItems extends AppCompatActivity implements RecyclerViewState {
 
     ArrayList<StockItem> stockItems = new ArrayList<StockItem>();
     private FirebaseDatabase database;
@@ -43,8 +43,7 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
     private FirebaseUser user;
     String uid;
     Spinner filters, order;
-    int filterSelected;
-    int orderSelected;
+    int filterSelected,orderSelected;
     String keyword;
     EditText e1;
 
@@ -55,7 +54,6 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
         setContentView(R.layout.activity_browse_items);
 
         filters = findViewById(R.id.filter);
-        order = findViewById(R.id.order);
         e1 = findViewById(R.id.variant);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -73,41 +71,12 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(myAdapter);
 
-        getData();
-    }
-
-    public void getData() {
         getItems();
-        order.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                filterSelected = filters.getSelectedItemPosition();
-
-                if (filterSelected == 0) {
-
-                    ascending();
-                }
-
-                if (filterSelected == 1) {
-                    descending();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
     }
 
     @Override
     public void ascending() {
 
-        //orderSelected=order.getSelectedItemPosition();
-        filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterSelected = filters.getSelectedItemPosition();
 
                 if (filterSelected == 0) {
@@ -150,7 +119,7 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
                     Collections.sort(stockItems, new Comparator<StockItem>() {
                         @Override
                         public int compare(StockItem o1, StockItem o2) {
-                            return String.valueOf(o1.getPrice()).compareToIgnoreCase(String.valueOf(o2.getPrice()));
+                            return o1.getPrice()-o2.getPrice();
                         }
                     });
                     myAdapter.notifyDataSetChanged();
@@ -159,19 +128,12 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
             }
 
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-    }
+
+
 
     @Override
     public void descending() {
 
-        filters.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterSelected = filters.getSelectedItemPosition();
                 if (filterSelected == 0) {
                     Collections.sort(stockItems, new Comparator<StockItem>() {
@@ -210,18 +172,11 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
                     Collections.sort(stockItems, new Comparator<StockItem>() {
                         @Override
                         public int compare(StockItem o1, StockItem o2) {
-                            return String.valueOf(o2.getPrice()).compareToIgnoreCase(String.valueOf(o1.getPrice()));
+                            return o2.getPrice()-o1.getPrice();
                         }
                     });
                     myAdapter.notifyDataSetChanged();
                 }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
     }
 
 
@@ -279,6 +234,14 @@ public class BrowseItems extends AppCompatActivity implements RecyclerViewState 
     public void reset(View view) {
         stockItems.clear();
         myAdapter.notifyDataSetChanged();
-        getData();
+        getItems();
+    }
+
+    public void descending(View view) {
+        descending();
+    }
+
+    public void ascending(View view) {
+        ascending();
     }
 }
